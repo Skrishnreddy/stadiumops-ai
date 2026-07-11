@@ -1,29 +1,35 @@
 services:
-  # Backend API Web Service
   - type: web
     name: stadiumops-ai-backend
-    env: python
+    runtime: python
+    plan: free
     buildCommand: pip install -r backend/requirements.txt
-    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
     envVars:
       - key: ENVIRONMENT
         value: production
+      - key: PYTHON_VERSION
+        value: 3.13.5
       - key: DATABASE_URL
         value: sqlite:///./stadiumops.db
       - key: RATE_LIMIT_WINDOW_SECONDS
         value: "60"
       - key: RATE_LIMIT_MAX_REQUESTS
         value: "100"
+      - key: ALLOWED_ORIGINS
+        sync: false
       - key: GEMINI_API_KEY
-        sync: false # Must be set in Render dashboard securely
-
-  # Frontend Static Site
+        sync: false
   - type: web
     name: stadiumops-ai-frontend
-    env: static
-    buildCommand: cd frontend && npm install && npm run build
-    publishDir: frontend/dist
+    runtime: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false
     routes:
       - type: rewrite
-        src: /*
-        dest: /index.html
+        source: /*
+        destination: /index.html

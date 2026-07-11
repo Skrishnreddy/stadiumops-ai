@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     RATE_LIMIT_PER_MINUTE: int = 60
     
     # Allowed CORS Origins (comma-separated string)
-    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:5173,https://stadiumops-ai.vercel.app"
+    ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:5173,https://stadiumops-ai-frontend.onrender.com"
 
     model_config = SettingsConfigDict(
         env_file=".env",

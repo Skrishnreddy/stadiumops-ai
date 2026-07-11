@@ -25,6 +25,6 @@ During global sporting events, delays in incident reporting or standard manual l
 
 Check out the prototype:
 💻 GitHub: https://github.com/Skrishnreddy/stadiumops-ai
-🌐 Deployed Web App: https://stadiumops-ai.vercel.app (Deployment Placeholder)
+🌐 Deployed Web App: https://stadiumops-ai-frontend.onrender.com/
 
 #SmartStadiums #FastAPI #ReactJS #ViteJS #GeminiAPI #Accessibility #DevSecOps #PromptWars #FIFA2026

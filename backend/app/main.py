@@ -23,8 +23,9 @@ app = FastAPI(
     title="StadiumOps AI Backend",
     description="GenAI Stadium Incident Management Assistant for World Cup 2026 operations.",
     version="1.0.0",
-    docs_url="/docs" if settings.ENVIRONMENT == "development" else None,
-    redoc_url=None
+    docs_url="/docs",
+    redoc_url=None,
+    openapi_url="/openapi.json"
 )
 
 # 1. Custom Security Response Headers Middleware

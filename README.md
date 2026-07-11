@@ -146,8 +146,9 @@ For a detailed review of our architectural assumptions and constraints, check [d
 ---
 
 ## 17. Demo & Media
-- **Demo Link**: [https://stadiumops-ai.vercel.app](https://stadiumops-ai.vercel.app) *(Placeholder)*
-- **Screenshots**: *Place screenshot here*
+- **GitHub Repository**: [https://github.com/Skrishnreddy/stadiumops-ai](https://github.com/Skrishnreddy/stadiumops-ai)
+- **Demo Link**: [https://stadiumops-ai.vercel.app](https://stadiumops-ai.vercel.app) *(Deployment Link Placeholder)*
+- **LinkedIn Post**: Available in [docs/linkedin-post.md](file:///Users/gsaikrishnareddy/.gemini/antigravity-ide/scratch/stadiumops-ai/docs/linkedin-post.md)
 
 ---
 

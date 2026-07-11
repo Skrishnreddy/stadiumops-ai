@@ -36,7 +36,7 @@ StadiumOps AI bridges the gap between incident reporting and dispatch. When safe
 - **Frontend**: React, TypeScript, Vite, Vanilla CSS.
 - **Backend**: FastAPI, Python 3, SQLAlchemy, Pydantic (validation and configuration).
 - **Database**: SQLite for local persistence.
-- **AI**: Gemini API (`gemini-1.5-flash`), with structured JSON enforcement.
+- **AI**: Gemini API (`gemini-1.5-flash`) using the supported `google-genai` SDK, with structured JSON schema enforcement.
 
 ## 6. Architecture & Data Flow
 A detailed architectural review and ASCII flow diagram can be found in [docs/architecture.md](file:///Users/gsaikrishnareddy/.gemini/antigravity-ide/scratch/stadiumops-ai/docs/architecture.md).
@@ -124,21 +124,28 @@ pytest backend/ -v
 
 ---
 
-## 14. Deployment Steps
+## 14. Production Deployment Steps
 
-### Backend (Render / Railway / Cloud Run)
-- Build command: `pip install -r backend/requirements.txt`
-- Start command: `python -m backend.app.main`
-- Set environment variables on the hosting platform:
-  - `PORT=8000`
+### Backend (Render Web Service)
+- **Runtime**: `Python`
+- **Build Command**: `pip install -r backend/requirements.txt`
+- **Start Command**: `uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
+- **Health Check Endpoint**: `/api/health`
+- **Environment Variables**:
   - `ENVIRONMENT=production`
-  - `GEMINI_API_KEY=your_key_here`
+  - `DATABASE_URL=sqlite:///./stadiumops.db`
+  - `GEMINI_API_KEY=your_gemini_api_key`
+  - `ALLOWED_ORIGINS=https://stadiumops-ai-frontend.onrender.com`
 
-### Frontend (Vercel)
-- Set Environment Variable: `VITE_API_URL=https://your-backend-url.com`
-- Framework Preset: `Vite`
-- Build Command: `npm run build`
-- Output Directory: `dist`
+### Frontend (Render Static Site)
+- **Runtime**: `Static`
+- **Build Command**: `cd frontend && npm install && npm run build`
+- **Publish Directory**: `frontend/dist`
+- **Environment Variables**:
+  - `VITE_API_URL=https://stadiumops-ai-backend.onrender.com`
+- **Rewrite Routes (SPA)**:
+  - Source: `/*`
+  - Destination: `/index.html`
 
 ---
 

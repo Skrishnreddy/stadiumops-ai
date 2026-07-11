@@ -24,7 +24,7 @@ During global sporting events, delays in incident reporting or standard manual l
 - 100% WCAG 2.1 AA compliant frontend, featuring complete keyboard navigation, focus indicators, and text-based semantics alongside status colors.
 
 Check out the prototype:
-💻 GitHub: [GitHub Link Placeholder]
-🌐 Deployed Web App: [Deployed Link Placeholder]
+💻 GitHub: https://github.com/Skrishnreddy/stadiumops-ai
+🌐 Deployed Web App: https://stadiumops-ai.vercel.app (Deployment Placeholder)
 
 #SmartStadiums #FastAPI #ReactJS #ViteJS #GeminiAPI #Accessibility #DevSecOps #PromptWars #FIFA2026

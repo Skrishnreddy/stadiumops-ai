@@ -21,7 +21,7 @@ During global sporting events, delays in incident reporting or standard manual l
 
 ### 🔒 Security & ♿ Accessibility First
 - Implemented sliding-window rate limiting, input sanitation to block injection attacks, and strict CORS/CSP configurations.
-- 100% WCAG 2.1 AA compliant frontend, featuring complete keyboard navigation, focus indicators, and text-based semantics alongside status colors.
+- Designed using WCAG 2.1 AA accessibility principles, including keyboard navigation, focus indicators, and text labels alongside color.
 
 Check out the prototype:
 💻 GitHub: https://github.com/Skrishnreddy/stadiumops-ai

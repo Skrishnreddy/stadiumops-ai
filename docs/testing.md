@@ -24,11 +24,18 @@ In the test environment, since `GEMINI_API_KEY` is not present, the `GeminiServi
 
 ## Executing Tests
 
+### Backend Tests
 To run the backend tests, execute:
 ```bash
-pytest backend/ -v
+PYTHONPATH=. ./backend/.venv/bin/pytest tests/backend -v
 ```
 To run tests with code coverage metrics:
 ```bash
-pytest backend/ --cov=backend
+PYTHONPATH=. ./backend/.venv/bin/pytest --cov=backend/app --cov-report=term-missing
+```
+
+### Frontend Tests
+To run the frontend Vitest suite, navigate to the `frontend/` directory and execute:
+```bash
+npm run test
 ```

@@ -3,7 +3,8 @@ import logging
 import re
 from typing import Dict, Any, List, Optional
 from pydantic import BaseModel, Field
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from backend.app.core.config import settings
 from backend.app.core.exceptions import PromptInjectionException
 from backend.app.services.classifier import RuleBasedClassifier
@@ -66,9 +67,7 @@ class GeminiService:
             return RuleBasedClassifier.classify(description)
 
         try:
-            # Configure API key
-            genai.configure(api_key=settings.GEMINI_API_KEY)
-            model = genai.GenerativeModel('gemini-1.5-flash')
+            client = genai.Client(api_key=settings.GEMINI_API_KEY, http_options={"timeout": 4.0})
 
             # Build prompt
             prompt = f"""
@@ -91,14 +90,13 @@ Respond strictly with a JSON object matching the following structure:
   "reasoning_summary": "Short 1-2 sentence explanation of classification decision, do not reveal chain of thought"
 }}
 """
-            # Call API with generation config requesting JSON and setting a timeout
-            response = model.generate_content(
-                prompt,
-                generation_config=genai.GenerationConfig(
+            response = client.models.generate_content(
+                model='gemini-1.5-flash',
+                contents=prompt,
+                config=types.GenerateContentConfig(
                     response_mime_type="application/json",
                     temperature=0.1
-                ),
-                request_options={"timeout": 4.0}  # 4 second timeout
+                )
             )
             
             # Parse & validate response using Pydantic
@@ -121,8 +119,7 @@ Respond strictly with a JSON object matching the following structure:
             return cls._generate_static_announcement(incident_title, category, location, severity)
 
         try:
-            genai.configure(api_key=settings.GEMINI_API_KEY)
-            model = genai.GenerativeModel('gemini-1.5-flash')
+            client = genai.Client(api_key=settings.GEMINI_API_KEY, http_options={"timeout": 4.0})
 
             prompt = f"""
 You are a translation assistant for the FIFA World Cup 2026 stadium announcements.
@@ -147,13 +144,13 @@ Respond strictly with a JSON object:
   "text_ar": "Draft in Arabic"
 }}
 """
-            response = model.generate_content(
-                prompt,
-                generation_config=genai.GenerationConfig(
+            response = client.models.generate_content(
+                model='gemini-1.5-flash',
+                contents=prompt,
+                config=types.GenerateContentConfig(
                     response_mime_type="application/json",
                     temperature=0.2
-                ),
-                request_options={"timeout": 4.0}
+                )
             )
 
             data = json.loads(response.text)

@@ -1,4 +1,3 @@
-import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 
@@ -16,6 +15,7 @@ import { Badge } from '../components/UI/Badge';
 import { Modal } from '../components/UI/Modal';
 import { DashboardCards } from '../components/DashboardCards';
 import { Timeline } from '../components/Timeline';
+import type { Incident } from '../types';
 
 describe('StadiumOps AI Frontend Test Suite', () => {
   
@@ -78,7 +78,7 @@ describe('StadiumOps AI Frontend Test Suite', () => {
 
   // 5. Dashboard Cards Rendering
   it('renders dashboard stats cards with count values', () => {
-    const mockIncidents = [
+    const mockIncidents: Incident[] = [
       { 
         id: '1', 
         title: 'Smoke at Gate 2', 

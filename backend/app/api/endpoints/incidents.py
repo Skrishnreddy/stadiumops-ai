@@ -18,7 +18,9 @@ from backend.app.schemas.incidents import (
     AnnouncementResponse,
     AnnouncementApprove,
     PostIncidentReportResponse,
-    AuditLogResponse
+    AuditLogResponse,
+    IncidentAnalyseInput,
+    IncidentAnalyseResponse
 )
 from backend.app.services.gemini import GeminiService
 from backend.app.services.sop import SOPService
@@ -120,6 +122,29 @@ def create_incident(payload: IncidentCreate, db: Session = Depends(get_db)):
     db.commit()
 
     return to_incident_response(new_incident)
+
+
+@router.post("/incidents/analyse", response_model=IncidentAnalyseResponse)
+def analyse_incident(payload: IncidentAnalyseInput):
+    """
+    Analyzes an incident description and returns predicted category, severity,
+    priority, responsible team, immediate actions, confidence and reasoning summary.
+    Does not write to the database.
+    """
+    class_result = GeminiService.classify_incident(
+        description=payload.description,
+        zone=payload.location_zone,
+        gate=payload.location_gate
+    )
+    return IncidentAnalyseResponse(
+        category=class_result["category"],
+        severity=class_result["severity"],
+        priority=class_result["priority"],
+        confidence=class_result["confidence"],
+        responsible_team=class_result["responsible_team"],
+        immediate_actions=class_result["immediate_actions"],
+        reasoning_summary=class_result["reasoning_summary"]
+    )
 
 
 @router.get("/incidents", response_model=List[IncidentResponse])

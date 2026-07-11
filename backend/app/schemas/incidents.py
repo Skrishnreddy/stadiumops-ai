@@ -93,3 +93,26 @@ class PostIncidentReportResponse(BaseModel):
     incident_id: str
     generated_at: datetime
     report_markdown: str
+
+class IncidentAnalyseInput(BaseModel):
+    description: str = Field(..., min_length=10, max_length=2000, description="Full description of what is happening")
+    location_zone: str = Field(..., min_length=1, max_length=50, description="Stadium zone (e.g. Zone A)")
+    location_gate: str = Field(..., min_length=2, max_length=50, description="Nearest entry/exit gate (e.g. Gate 4)")
+
+    @field_validator("description", "location_zone", "location_gate")
+    @classmethod
+    def sanitize_strings(cls, v: str) -> str:
+        v = v.strip()
+        if "<script" in v.lower() or "javascript:" in v.lower():
+            raise ValueError("Input contains prohibited script tags or keywords")
+        return v
+
+class IncidentAnalyseResponse(BaseModel):
+    category: str
+    severity: str
+    priority: str
+    confidence: float
+    responsible_team: str
+    immediate_actions: List[str]
+    reasoning_summary: str
+

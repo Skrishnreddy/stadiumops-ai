@@ -64,7 +64,7 @@ Designed with WCAG 2.1 AA accessibility principles:
 
 ## 12. Testing & Coverage
 Our testing strategy targets full coverage of logical state flows, validation schemes, and fallback handlers:
-- **Backend Tests**: 14 tests passing, verifying health probes, inputs, classification rules, state machine transitions, and security rates.
+- **Backend Tests**: 15 tests passing, verifying health probes, inputs, classification rules, state machine transitions, and security rates.
 - **Backend Coverage**: 90% total statements covered (via `pytest-cov`).
 - **Frontend Tests**: 9 tests passing (via `vitest`), validating dashboard cards, badge labels, modal keyboard events, spinners, and form submissions.
 - **Vite Build Result**: Success (0 type warnings).

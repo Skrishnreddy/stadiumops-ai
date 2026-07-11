@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { apiService } from '../services/api';
 import type { Incident } from '../types';
 import { Badge } from '../components/UI/Badge';
@@ -17,7 +17,7 @@ export const IncidentHistory: React.FC<IncidentHistoryProps> = ({ onSelectIncide
   const [severityFilter, setSeverityFilter] = useState('');
   const [zoneFilter, setZoneFilter] = useState('');
 
-  const fetchHistory = async () => {
+  const fetchHistory = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -32,11 +32,11 @@ export const IncidentHistory: React.FC<IncidentHistoryProps> = ({ onSelectIncide
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter, severityFilter, zoneFilter]);
 
   useEffect(() => {
     fetchHistory();
-  }, [statusFilter, severityFilter, zoneFilter]);
+  }, [fetchHistory]);
 
   return (
     <div className="animate-fade-in">

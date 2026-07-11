@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { apiService } from '../services/api';
 import type { Incident } from '../types';
 import { DashboardCards } from '../components/DashboardCards';
@@ -10,10 +10,10 @@ interface DashboardProps {
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ onSelectIncident, incidents, setIncidents }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchIncidents = async () => {
+  const fetchIncidents = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -24,11 +24,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ onSelectIncident, incident
     } finally {
       setLoading(false);
     }
-  };
+  }, [setIncidents]);
 
   useEffect(() => {
     fetchIncidents();
-  }, []);
+  }, [fetchIncidents]);
 
   return (
     <div className="animate-fade-in">

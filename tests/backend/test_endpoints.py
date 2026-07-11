@@ -165,3 +165,31 @@ def test_rate_limiting_middleware(client):
         # Restore original limit
         rate_limiter.limit = original_limit
         rate_limiter.requests.clear()
+
+def test_analyse_incident(client):
+    # Test valid analysis
+    payload = {
+        "description": "Thick black smoke detected in the concession area.",
+        "location_zone": "Zone A",
+        "location_gate": "Gate 4"
+    }
+    res = client.post("/api/incidents/analyse", json=payload)
+    assert res.status_code == status.HTTP_200_OK
+    data = res.json()
+    assert "category" in data
+    assert "severity" in data
+    assert "priority" in data
+    assert "confidence" in data
+    assert "responsible_team" in data
+    assert "immediate_actions" in data
+    assert "reasoning_summary" in data
+
+    # Test invalid analysis input (short description)
+    invalid_payload = {
+        "description": "Short",
+        "location_zone": "Zone A",
+        "location_gate": "Gate 4"
+    }
+    invalid_res = client.post("/api/incidents/analyse", json=invalid_payload)
+    assert invalid_res.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+

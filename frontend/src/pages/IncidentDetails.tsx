@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { apiService } from '../services/api';
 import type { Incident, AuditLog, Announcement, SOP } from '../types';
 import { Badge } from '../components/UI/Badge';
@@ -30,7 +30,7 @@ export const IncidentDetails: React.FC<IncidentDetailsProps> = ({ incidentId, us
   const [reportMarkdown, setReportMarkdown] = useState('');
   const [reportLoading, setReportLoading] = useState(false);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -49,11 +49,11 @@ export const IncidentDetails: React.FC<IncidentDetailsProps> = ({ incidentId, us
       setLoading(false);
       setSopLoading(false);
     }
-  };
+  }, [incidentId]);
 
   useEffect(() => {
     loadData();
-  }, [incidentId]);
+  }, [loadData]);
 
   const handleStatusChange = async (targetStatus: string) => {
     if (!incident) return;

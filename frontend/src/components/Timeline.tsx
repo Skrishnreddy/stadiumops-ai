@@ -34,7 +34,7 @@ export const Timeline: React.FC<TimelineProps> = ({ logs }) => {
   return (
     <div style={{ padding: '10px 0' }}>
       <h3 style={{ fontSize: '1.1rem', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span>🕒</span> Immutable Audit Trail
+        <span>🕒</span> Structured Audit Trail
       </h3>
       {logs.length === 0 ? (
         <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>No audit events logged.</div>

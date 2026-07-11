@@ -2,7 +2,7 @@
 
 ## System Overview
 
-StadiumOps AI is a dual-tier smart stadium assistant built to support tournament operations teams during major sporting events like the FIFA World Cup 2026. The solution manages incident reports, runs automated GenAI-based risk classifications, loads Standard Operating Procedures (SOPs), drafts emergency public announcements in multiple languages, and provides immutable audit timelines.
+StadiumOps AI is a dual-tier smart stadium assistant built to support tournament operations teams during major sporting events like the FIFA World Cup 2026. The solution manages incident reports, runs automated GenAI-based risk classifications, loads Standard Operating Procedures (SOPs), drafts emergency public announcements in multiple languages, and provides structured database-persisted audit timelines.
 
 ```
 +-------------------------------------------------------------+

@@ -232,7 +232,7 @@ export const Settings: React.FC = () => {
         <h3 style={{ fontSize: '1.1rem', marginBottom: '10px' }}>StadiumOps AI System Information</h3>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
           This prototype runs using local memory caches for rapid keyword-based SOP mapping. 
-          The backend connects to the Gemini API (using <code>gemini-1.5-flash</code>) to execute semantic incident classifications, with a pure Python heuristic classifier acting as a zero-downtime fallback.
+          The backend connects to the Gemini API (using <code>gemini-1.5-flash</code>) to execute semantic incident classifications, with a pure Python heuristic classifier acting as a fallback mechanism for service continuity.
         </p>
       </div>
     </div>

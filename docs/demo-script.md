@@ -45,7 +45,7 @@ This script walks through the primary demo scenario for evaluation.
 1. In the lifecycle action panel, click **Move to "Acknowledged"** (simulating responder dispatcher team responding).
 2. Click **Move to "In Progress"** as response teams arrive.
 3. Once the crowd disperses and medics treat the fallen spectators, click **Move to "Resolved"**.
-4. Observe the **Immutable Audit Trail** updating in real time on the right side, showing all status updates, announcement approvals, and timestamps.
+4. Observe the **Structured Audit Trail** updating in real time on the right side, showing all status updates, announcement approvals, and timestamps.
 5. Click **Compile Post-Incident Report** in the top toolbar.
 6. The modal displays a complete Markdown report compiling metadata, response timeline logs, and SOP details. Click **Copy Markdown** to save it.
 7. Finally, click **Move to "Closed"** to archive the record. Click **History** in the sidebar to view it in the archived incident list.

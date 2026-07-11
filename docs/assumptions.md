@@ -5,7 +5,7 @@
 1. **Tournament Environment**: The application assumes a single-stadium setup configured specifically for the FIFA World Cup 2026 Azteca Stadium. Multi-stadium operations are out of scope for the MVP.
 2. **Access Control**: Users interact with the app via client-side simulated roles (Sofia: Operations Manager, Marcus: Zone Responder, Elena: Compliance Auditor). Full role-based authorization (e.g. JWT and OAuth2 validation) is bypassed in this prototype for simplicity.
 3. **Connectivity**: Devices in the stadium command center are assumed to have a modern local network connection. In case of local network failure, the frontend operates offline in memory and the backend uses offline ticket scan logs.
-4. **Data Durability**: A local SQLite database file (`stadiumops.db`) is adequate for prototyping. Since SQLite locks the file during writes, it assumes low concurrency.
+4. **Data Durability**: A local SQLite database file (`stadiumops.db`) is used for the prototype. Since Render containers have ephemeral storage, database records will reset on server restarts unless a persistent disk volume is configured. SQLite locks the file during writes, assuming low concurrency.
 
 ## Technical Limitations
 

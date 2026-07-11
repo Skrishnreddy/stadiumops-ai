@@ -162,7 +162,7 @@ For a detailed review of our architectural assumptions and constraints, check [d
 ## 17. Demo & Media
 - **GitHub Repository**: [https://github.com/Skrishnreddy/stadiumops-ai](https://github.com/Skrishnreddy/stadiumops-ai)
 - **Demo Link**: [https://stadiumops-ai-frontend.onrender.com/](https://stadiumops-ai-frontend.onrender.com/)
-- **LinkedIn Post**: Available in [docs/linkedin-post.md](file:///Users/gsaikrishnareddy/.gemini/antigravity-ide/scratch/stadiumops-ai/docs/linkedin-post.md)
+- **LinkedIn Post**: https://www.linkedin.com/posts/g-saikrishna-a8651222a_smartstadiums-fastapi-reactjs-ugcPost-7481683690708713472-YIbs/?utm_source=share&utm_medium=member_desktop&rcm=ACoAADligIYBTSmrSC5FQum6qcAm5sRfQ-_QGKo
 
 ---
 

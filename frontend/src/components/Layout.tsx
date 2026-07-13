@@ -44,9 +44,9 @@ export const Layout: React.FC<LayoutProps> = ({
         <div style={{ marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
           <span style={{ fontSize: '2rem' }} aria-hidden="true">🏟️</span>
           <div>
-            <h1 style={{ fontSize: '1.25rem', fontWeight: 800, background: 'linear-gradient(135deg, var(--primary), var(--secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <div style={{ fontSize: '1.25rem', fontWeight: 800, background: 'linear-gradient(135deg, var(--primary), var(--secondary))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
               StadiumOps AI
-            </h1>
+            </div>
             <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
               FIFA WC 2026 PROTOTYPE
             </span>

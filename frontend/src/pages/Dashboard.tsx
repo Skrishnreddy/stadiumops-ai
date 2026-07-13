@@ -34,7 +34,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onSelectIncident, incident
     <div className="animate-fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Live Operations Board</h2>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Live Operations Board</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
             Real-time incident response management for FIFA World Cup 2026 Azteca Stadium.
           </p>

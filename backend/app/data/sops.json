@@ -14,7 +14,7 @@
     "source_reference": "FIFA Smart Stadium Safety Code, Section 12.1"
   },
   {
-    "category": "Fire response",
+    "category": "Fire or smoke",
     "title": "SOP-FR-02: Fire and Smoke Mitigation Protocol",
     "matched_section": "Section 4.1: Localized Flame/Smoke Response",
     "recommended_steps": [
@@ -84,7 +84,7 @@
     "source_reference": "Stadium Infrastructure Standards & Engineering Manual"
   },
   {
-    "category": "Network outage",
+    "category": "Network failure",
     "title": "SOP-NO-07: IT and Communications Failure Response",
     "matched_section": "Section 9.1: Offline Ticketing and Radio Outage Protocols",
     "recommended_steps": [

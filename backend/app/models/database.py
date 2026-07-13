@@ -28,8 +28,8 @@ class Incident(Base):
     immediate_actions = Column(Text, nullable=False)  # JSON-serialized array of strings
     reasoning_summary = Column(Text, nullable=False)
 
-    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc), nullable=False)
+    updated_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc), onupdate=lambda: datetime.datetime.now(datetime.timezone.utc), nullable=False)
 
     # Relationships
     audit_logs = relationship("AuditLog", back_populates="incident", cascade="all, delete-orphan")
@@ -44,7 +44,7 @@ class AuditLog(Base):
     action = Column(String(100), nullable=False)
     actor = Column(String(100), nullable=False)
     details = Column(Text, nullable=False)
-    timestamp = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    timestamp = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc), nullable=False)
 
     # Relationships
     incident = relationship("Incident", back_populates="audit_logs")
@@ -62,7 +62,7 @@ class Announcement(Base):
     is_approved = Column(Boolean, default=False, nullable=False)
     approved_by = Column(String(100), nullable=True)
     approved_at = Column(DateTime, nullable=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc), nullable=False)
 
     # Relationships
     incident = relationship("Incident", back_populates="announcements")

@@ -128,7 +128,7 @@ export const IncidentDetails: React.FC<IncidentDetailsProps> = ({ incidentId, us
   if (!incident) {
     return (
       <div className="glass-panel" style={{ padding: '40px', textAlign: 'center' }}>
-        <h3>Incident Not Found</h3>
+        <h1>Incident Not Found</h1>
         <button onClick={onBack} className="btn btn-secondary" style={{ marginTop: '15px' }}>
           Back to Dashboard
         </button>
@@ -196,7 +196,7 @@ export const IncidentDetails: React.FC<IncidentDetailsProps> = ({ incidentId, us
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
               <div>
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>INCIDENT ID: #{incident.id.slice(0, 8)}</span>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginTop: '4px' }}>{incident.title}</h3>
+                <h1 style={{ fontSize: '1.5rem', fontWeight: 700, marginTop: '4px' }}>{incident.title}</h1>
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <Badge type="severity" value={incident.severity} />

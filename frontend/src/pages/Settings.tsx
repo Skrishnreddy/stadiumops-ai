@@ -20,7 +20,7 @@ export const Settings: React.FC = () => {
       source_reference: 'FIFA Smart Stadium Safety Code, Section 12.1'
     },
     {
-      category: 'Fire response',
+      category: 'Fire or smoke',
       title: 'SOP-FR-02: Fire and Smoke Mitigation Protocol',
       matched_section: 'Section 4.1: Localized Flame/Smoke Response',
       recommended_steps: [
@@ -90,7 +90,7 @@ export const Settings: React.FC = () => {
       source_reference: 'Stadium Infrastructure Standards & Engineering Manual'
     },
     {
-      category: 'Network outage',
+      category: 'Network failure',
       title: 'SOP-NO-07: IT and Communications Failure Response',
       matched_section: 'Section 9.1: Offline Ticketing and Radio Outage Protocols',
       recommended_steps: [
@@ -149,7 +149,7 @@ export const Settings: React.FC = () => {
   return (
     <div className="animate-fade-in">
       <div style={{ marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Safety Standard Operating Procedures</h2>
+        <h1 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Safety Standard Operating Procedures</h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
           Reference library of FIFA World Cup 2026 pre-approved safety and response frameworks.
         </p>

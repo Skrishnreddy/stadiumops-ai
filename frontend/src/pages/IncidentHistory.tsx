@@ -41,7 +41,7 @@ export const IncidentHistory: React.FC<IncidentHistoryProps> = ({ onSelectIncide
   return (
     <div className="animate-fade-in">
       <div style={{ marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Incident Archive</h2>
+        <h1 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Incident Archive</h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
           Historical record and operational audit log of all reported tournament incidents.
         </p>

@@ -41,7 +41,7 @@ def test_create_incident_invalid_input(client):
         "reporter_name": "Steward Dave"
     }
     response = client.post("/api/incidents", json=payload)
-    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+    assert response.status_code == 422
 
 def test_create_incident_prompt_injection(client):
     payload = {
@@ -191,5 +191,241 @@ def test_analyse_incident(client):
         "location_gate": "Gate 4"
     }
     invalid_res = client.post("/api/incidents/analyse", json=invalid_payload)
-    assert invalid_res.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+    assert invalid_res.status_code == 422
+
+
+def test_health_check_unhealthy(client):
+    from sqlalchemy.orm import Session
+    with patch.object(Session, "execute", side_effect=Exception("DB Connection Error")):
+        response = client.get("/api/health")
+        assert response.status_code == status.HTTP_200_OK
+        assert response.json()["status"] == "online"
+        assert "unhealthy: DB Connection Error" in response.json()["database"]
+
+
+def test_to_incident_response_invalid_json(client):
+    # 1. Create incident
+    payload = {
+        "title": "Turnstile Jam",
+        "description": "Electronic gate turnstile jam blocking ingress flow.",
+        "location_zone": "D",
+        "location_section": "Gate 12",
+        "location_gate": "Gate 12",
+        "reporter_name": "Dave"
+    }
+    res = client.post("/api/incidents", json=payload)
+    incident_id = res.json()["id"]
+
+    # 2. Corrupt immediate_actions in db to be invalid JSON
+    from backend.app.models.database import Incident
+    from tests.backend.conftest import TestingSessionLocal
+    db = TestingSessionLocal()
+    try:
+        db_inc = db.query(Incident).filter(Incident.id == incident_id).first()
+        db_inc.immediate_actions = "invalid-json{"
+        db.commit()
+    finally:
+        db.close()
+
+    # 3. Retrieve incident and check that immediate_actions fallback to []
+    get_res = client.get(f"/api/incidents/{incident_id}")
+    assert get_res.status_code == status.HTTP_200_OK
+    assert get_res.json()["incident"]["immediate_actions"] == []
+
+
+def test_status_transition_same(client):
+    # 1. Create incident
+    payload = {
+        "title": "Turnstile Jam",
+        "description": "Electronic gate turnstile jam blocking ingress flow.",
+        "location_zone": "D",
+        "location_section": "Gate 12",
+        "location_gate": "Gate 12",
+        "reporter_name": "Dave"
+    }
+    res = client.post("/api/incidents", json=payload)
+    incident_id = res.json()["id"]
+    
+    # Transition Open -> Open (should succeed with no-op)
+    res_transition = client.patch(f"/api/incidents/{incident_id}/status", json={"status": "Open", "actor": "Sofia (Manager)"})
+    assert res_transition.status_code == status.HTTP_200_OK
+    assert res_transition.json()["status"] == "Open"
+
+
+def test_list_incidents_filters(client):
+    # Create incidents
+    client.post("/api/incidents", json={
+        "title": "Medical help required", "description": "Fallen fan in row 10 needs first aid.",
+        "location_zone": "A", "location_section": "101", "location_gate": "Gate 1", "reporter_name": "Dave"
+    })
+    client.post("/api/incidents", json={
+        "title": "Turnstile Failure", "description": "Electronic turnstile offline.",
+        "location_zone": "B", "location_section": "102", "location_gate": "Gate 2", "reporter_name": "Alice"
+    })
+    
+    # Test status filter
+    res = client.get("/api/incidents?status=Open")
+    assert len(res.json()) >= 2
+    
+    # Test severity filter
+    res = client.get("/api/incidents?severity=Critical")
+    assert len(res.json()) >= 1
+    
+    # Test zone filter
+    res = client.get("/api/incidents?zone=B")
+    assert len(res.json()) >= 1
+
+
+def test_incident_not_found_endpoints(client):
+    invalid_id = "non-existent-uuid"
+    
+    # 1. GET details
+    res = client.get(f"/api/incidents/{invalid_id}")
+    assert res.status_code == status.HTTP_404_NOT_FOUND
+    
+    # 2. PATCH status
+    res = client.patch(f"/api/incidents/{invalid_id}/status", json={"status": "Acknowledged", "actor": "Sofia"})
+    assert res.status_code == status.HTTP_404_NOT_FOUND
+    
+    # 3. POST announcement draft
+    res = client.post(f"/api/incidents/{invalid_id}/announcement")
+    assert res.status_code == status.HTTP_404_NOT_FOUND
+    
+    # 4. POST announcement approve (for non-existent incident)
+    res = client.post(f"/api/incidents/{invalid_id}/announcement/some-ann-id/approve", json={"actor": "Sofia"})
+    assert res.status_code == status.HTTP_404_NOT_FOUND
+    
+    # 5. POST report
+    res = client.post(f"/api/incidents/{invalid_id}/report")
+    assert res.status_code == status.HTTP_404_NOT_FOUND
+    
+    # 6. GET sop
+    res = client.get(f"/api/incidents/{invalid_id}/sop")
+    assert res.status_code == status.HTTP_404_NOT_FOUND
+
+
+def test_announcement_not_found(client):
+    # 1. Create incident
+    payload = {
+        "title": "Turnstile Jam",
+        "description": "Electronic gate turnstile jam blocking ingress flow.",
+        "location_zone": "D",
+        "location_section": "Gate 12",
+        "location_gate": "Gate 12",
+        "reporter_name": "Dave"
+    }
+    res = client.post("/api/incidents", json=payload)
+    incident_id = res.json()["id"]
+    
+    # Try to approve a non-existent announcement ID
+    res_approve = client.post(f"/api/incidents/{incident_id}/announcement/invalid-ann-id/approve", json={"actor": "Sofia"})
+    assert res_approve.status_code == status.HTTP_404_NOT_FOUND
+    assert "announcement not found" in res_approve.json()["detail"].lower()
+
+
+def test_unhandled_global_exception():
+    from fastapi.testclient import TestClient
+    from backend.app.main import app
+    from backend.app.core.database import get_db
+
+    local_client = TestClient(app, raise_server_exceptions=False)
+    
+    def raise_error():
+        raise RuntimeError("Unhandled logic crash")
+        
+    local_client.app.dependency_overrides[get_db] = raise_error
+    try:
+        res = local_client.get("/api/health")
+        assert res.status_code == 500
+        assert "internal server error" in res.json()["detail"].lower()
+    finally:
+        local_client.app.dependency_overrides.clear()
+
+
+def test_rate_limit_exceeded_exception_handling(client):
+    from backend.app.core.exceptions import RateLimitExceededException
+    def raise_rate_limit():
+        raise RateLimitExceededException()
+    from backend.app.core.database import get_db
+    client.app.dependency_overrides[get_db] = raise_rate_limit
+    try:
+        res = client.get("/api/health")
+        assert res.status_code == status.HTTP_429_TOO_MANY_REQUESTS
+        assert "rate limit exceeded" in res.json()["detail"].lower()
+    finally:
+        from tests.backend.conftest import override_get_db
+        client.app.dependency_overrides[get_db] = override_get_db
+
+
+def test_root_endpoint(client):
+    res = client.get("/")
+    assert res.status_code == status.HTTP_200_OK
+    assert "welcome" in res.json()["message"].lower()
+
+
+def test_schema_validations(client):
+    # 1. Test HTML/script sanitation in IncidentCreate
+    payload = {
+        "title": "<script>alert(1)</script>",
+        "description": "Short description that is actually long enough.",
+        "location_zone": "A",
+        "location_section": "101",
+        "location_gate": "Gate 1",
+        "reporter_name": "Dave"
+    }
+    res = client.post("/api/incidents", json=payload)
+    assert res.status_code == 422
+    
+    # 2. Test status validation in IncidentUpdateStatus
+    res = client.patch("/api/incidents/some-uuid/status", json={"status": "InvalidStatus", "actor": "Sofia"})
+    assert res.status_code == 422
+    
+    # 3. Test HTML/script sanitation in IncidentAnalyseInput
+    payload_analyse = {
+        "description": "javascript:alert(1)",
+        "location_zone": "A",
+        "location_gate": "Gate 1"
+    }
+    res = client.post("/api/incidents/analyse", json=payload_analyse)
+    assert res.status_code == 422
+
+
+def test_get_incident_sop_success(client):
+    # 1. Create incident
+    payload = {
+        "title": "Turnstile Jam",
+        "description": "Electronic gate turnstile jam blocking ingress flow.",
+        "location_zone": "D",
+        "location_section": "Gate 12",
+        "location_gate": "Gate 12",
+        "reporter_name": "Dave"
+    }
+    res = client.post("/api/incidents", json=payload)
+    incident_id = res.json()["id"]
+
+    # 2. Get SOP
+    res_sop = client.get(f"/api/incidents/{incident_id}/sop")
+    assert res_sop.status_code == status.HTTP_200_OK
+    assert "title" in res_sop.json()
+
+
+def test_rate_limiting_with_forwarded_for(client):
+    rate_limiter.requests.clear()
+    original_limit = rate_limiter.limit
+    rate_limiter.limit = 1
+    
+    try:
+        # Request with X-Forwarded-For header
+        headers = {"X-Forwarded-For": "203.0.113.195, 70.41.3.18"}
+        res = client.get("/api/incidents", headers=headers)
+        assert res.status_code == status.HTTP_200_OK
+        
+        # Second request from same IP should fail
+        res2 = client.get("/api/incidents", headers=headers)
+        assert res2.status_code == status.HTTP_429_TOO_MANY_REQUESTS
+    finally:
+        rate_limiter.limit = original_limit
+        rate_limiter.requests.clear()
+
+
 

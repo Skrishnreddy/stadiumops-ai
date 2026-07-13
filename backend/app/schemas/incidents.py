@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List, Optional
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 
 VALID_STATUSES = ["Open", "Acknowledged", "In Progress", "Resolved", "Closed"]
 
@@ -41,8 +41,7 @@ class AuditLogResponse(BaseModel):
     details: str
     timestamp: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class AnnouncementResponse(BaseModel):
     id: str
@@ -56,8 +55,7 @@ class AnnouncementResponse(BaseModel):
     approved_at: Optional[datetime] = None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class AnnouncementApprove(BaseModel):
     actor: str = Field(..., min_length=2, max_length=100, description="Manager name approving the announcement")
@@ -81,8 +79,7 @@ class IncidentResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class IncidentDetailResponse(BaseModel):
     incident: IncidentResponse

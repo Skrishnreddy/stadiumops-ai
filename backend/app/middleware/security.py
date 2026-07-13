@@ -56,7 +56,12 @@ class RateLimitingMiddleware(BaseHTTPMiddleware):
         if request.url.path == "/api/health":
             return await call_next(request)
 
-        client_ip = request.client.host if request.client else "unknown-ip"
+        # Resolve client IP behind reverse proxies (like Render's load balancer)
+        forwarded_for = request.headers.get("x-forwarded-for")
+        if forwarded_for:
+            client_ip = forwarded_for.split(",")[0].strip()
+        else:
+            client_ip = request.client.host if request.client else "unknown-ip"
         
         if not rate_limiter.is_allowed(client_ip):
             logger.warning(f"Rate limit hit for IP: {client_ip} on path {request.url.path}")

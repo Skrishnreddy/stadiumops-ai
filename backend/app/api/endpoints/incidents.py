@@ -286,7 +286,7 @@ def approve_announcement(incident_id: str, announcement_id: str, payload: Announ
 
     announcement.is_approved = True
     announcement.approved_by = payload.actor
-    announcement.approved_at = datetime.datetime.utcnow()
+    announcement.approved_at = datetime.datetime.now(datetime.timezone.utc)
     
     db.commit()
     db.refresh(announcement)
@@ -382,7 +382,7 @@ The following log represents the verified operational timeline recorded in the S
 - **AI Classification Confidence**: {incident.confidence * 100:.1f}%
 - **Classification Reasoning Summary**: {incident.reasoning_summary}
 - **Report Compiled By**: {actor}
-- **Generation Timestamp**: {datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")}
+- **Generation Timestamp**: {datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")}
 
 *Note: This report is a verified log and serves as the official tournament Operations Review document.*
 """
@@ -399,7 +399,7 @@ The following log represents the verified operational timeline recorded in the S
 
     return {
         "incident_id": incident.id,
-        "generated_at": datetime.datetime.utcnow(),
+        "generated_at": datetime.datetime.now(datetime.timezone.utc),
         "report_markdown": report_markdown.strip()
     }
 
